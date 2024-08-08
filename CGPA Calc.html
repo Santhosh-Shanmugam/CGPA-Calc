@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<title>CGPA Calculator</title>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+  }
+  form {
+    max-width: 500px;
+    margin: 0 auto;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+  }
+  h2 {
+    text-align: center;
+  }
+  label {
+    display: block;
+    margin-bottom: 5px;
+  }
+  input[type="text"] {
+    width: 100%;
+    padding: 8px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-sizing: border-box;
+  }
+  input[type="submit"] {
+    width: 100%;
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    background-color: #05990d88;
+    color: #fff;
+    font-weight: bold;
+    cursor: pointer;
+  }
+  #result {
+    margin-top: 20px;
+    font-size: 18px;
+    font-weight: bold;
+  }
+</style>
+</head>
+<body>
+
+<h2>CGPA Calculator</h2>
+
+<form id="gpaForm" onsubmit="calculateGPA(event)">
+  <label for="completedSemesters">Completed Semesters:</label>
+  <input type="number" id="completedSemesters" name="completedSemesters" min="1" required><br><br><br>
+
+  <div id="semesterInputs">
+    
+  </div>
+  
+  <input type="submit" value="Calculate CGPA">
+</form>
+
+<center><div id="result"></div></center>
+
+<script>
+function generateSemesterInputs(numSemesters) {
+  var semesterInputsDiv = document.getElementById("semesterInputs");
+  semesterInputsDiv.innerHTML = ""; 
+  
+  for (var i = 1; i <= numSemesters; i++) {
+    var label = document.createElement("label");
+    label.textContent = "Semester " + i + " GPA:";
+    
+    var input = document.createElement("input");
+    input.type = "text";
+    input.name = "semester" + i + "GPA";
+    input.pattern = "[0-9]+(\\.[0-9]+)?";
+    input.title = "Enter a valid GPA (e.g., 3.75)";
+    
+    semesterInputsDiv.appendChild(label);
+    semesterInputsDiv.appendChild(input);
+    semesterInputsDiv.appendChild(document.createElement("br"));
+  }
+}
+
+function calculateGPA(event) {
+  event.preventDefault();
+  
+  var numSemesters = parseInt(document.getElementById("completedSemesters").value);
+  var totalCredits = numSemesters * 4; 
+  
+  var totalGradePoints = 0;
+  
+  for (var i = 1; i <= numSemesters; i++) {
+    var gpa = parseFloat(document.getElementsByName("semester" + i + "GPA")[0].value);
+    if (!isNaN(gpa)) {
+      totalGradePoints += gpa * 4; 
+    }
+  }
+  
+  var gpa = totalGradePoints / totalCredits;
+  
+  document.getElementById("result").innerHTML = "Your CGPA is " + gpa.toFixed(2);
+}
+
+document.getElementById("completedSemesters").addEventListener("input", function() {
+  var numSemesters = parseInt(this.value);
+  if (!isNaN(numSemesters)) {
+    generateSemesterInputs(numSemesters);
+  }
+});
+</script>
+
+</body>
+</html>
